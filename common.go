@@ -1,4 +1,4 @@
-package z_api
+package myzap
 
 import (
 	"bytes"
@@ -27,7 +27,10 @@ func (s *Client) request(ctx context.Context, reqBody any, method, endpoint stri
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Client-Token", s.secret)
+	req.Header.Set("apitoken", s.token)
+	if len(s.sessionKey) > 0 {
+		req.Header.Set("sessionkey", s.sessionKey)
+	}
 
 	return s.httpClient.Do(req)
 }

@@ -1,4 +1,4 @@
-package z_api
+package myzap
 
 import (
 	"context"
@@ -9,14 +9,30 @@ import (
 	"net/http"
 )
 
+type tagsRequestInternal struct {
+	Session string `json:"session"`
+}
+
+type getTagsResponseInternal struct {
+	Result int            `json:"result"`
+	Token  []TagsResponse `json:"token"`
+}
+
 type TagsResponse struct {
-	Id    string `json:"id"`
-	Name  string `json:"name"`
-	Color int    `json:"color"`
+	Color      interface{} `json:"color"`
+	ColorIndex int         `json:"colorIndex"`
+	Count      int         `json:"count"`
+	HexColor   string      `json:"hexColor"`
+	Id         string      `json:"id"`
+	Name       string      `json:"name"`
 }
 
 func (s *Client) GetTags(ctx context.Context) ([]TagsResponse, error) {
-	resp, err := s.request(ctx, nil, http.MethodGet, fmt.Sprintf(tagsEndpoint, s.instance, s.token))
+	req := tagsRequestInternal{
+		Session: s.sessionKey,
+	}
+
+	resp, err := s.request(ctx, req, http.MethodPost, tagsEndpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -37,15 +53,15 @@ func (s *Client) GetTags(ctx context.Context) ([]TagsResponse, error) {
 		return nil, err
 	}
 
-	var toReturn []TagsResponse
+	var toReturn getTagsResponseInternal
 	if err = json.Unmarshal(body, &toReturn); err != nil {
 		return nil, fmt.Errorf("%w: %s", err, string(body))
 	}
 
-	return toReturn, nil
+	return toReturn.Token, nil
 }
 
-type CreateTagRequest struct {
+type createTagRequest struct {
 	Name string `json:"name"`
 }
 
@@ -53,33 +69,23 @@ type CreateTagResponse struct {
 	ID string `json:"id"`
 }
 
-func (s *Client) CreateTag(ctx context.Context, name string) (*CreateTagResponse, error) {
-	req := &CreateTagRequest{Name: name}
-	resp, err := s.request(ctx, req, http.MethodPost, fmt.Sprintf(createTagEndpoint, s.instance, s.token))
+func (s *Client) CreateTag(ctx context.Context, name string) error {
+	req := &createTagRequest{Name: name}
+	resp, err := s.request(ctx, req, http.MethodPost, createTagEndpoint)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 399 {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		bodyErr := errors.New(string(body))
-		return nil, fmt.Errorf("failed to get qr code with code %d: %w", resp.StatusCode, bodyErr)
+		return fmt.Errorf("failed to get qr code with code %d: %w", resp.StatusCode, bodyErr)
 	}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var toReturn CreateTagResponse
-	if err = json.Unmarshal(body, &toReturn); err != nil {
-		return nil, fmt.Errorf("%w: %s", err, string(body))
-	}
-
-	return &toReturn, nil
+	return nil
 }

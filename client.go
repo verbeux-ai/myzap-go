@@ -1,4 +1,4 @@
-package z_api
+package myzap
 
 import (
 	"net/http"
@@ -6,8 +6,7 @@ import (
 
 type Client struct {
 	token      string
-	secret     string
-	instance   string
+	sessionKey string
 	baseUrl    string
 	httpClient *http.Client
 }
@@ -18,7 +17,7 @@ type Option func(*Client)
 // NewClient creates a new client with the provided options
 func NewClient(opts ...Option) *Client {
 	c := &Client{
-		baseUrl:    "https://api.z-api.io",
+		baseUrl:    "http://myzap-1.verbeux.com.br",
 		httpClient: http.DefaultClient,
 	}
 
@@ -36,13 +35,6 @@ func WithToken(token string) Option {
 	}
 }
 
-// WithSecret sets the token of the client
-func WithSecret(secret string) Option {
-	return func(c *Client) {
-		c.secret = secret
-	}
-}
-
 // WithBaseUrl sets the base URL of the client
 func WithBaseUrl(baseUrl string) Option {
 	return func(c *Client) {
@@ -50,10 +42,10 @@ func WithBaseUrl(baseUrl string) Option {
 	}
 }
 
-// WithInstance sets the instance id of the client
-func WithInstance(instance string) Option {
+// WithSessionKey sets the sessionKey id of the client
+func WithSessionKey(sessionKey string) Option {
 	return func(c *Client) {
-		c.instance = instance
+		c.sessionKey = sessionKey
 	}
 }
 

@@ -1,6 +1,6 @@
 # Z-API Go
 
-Essa biblioteca foi desenvolvida para o uso do [z-api.io](z-api), api do whatsapp usando a linguagem go.
+Essa biblioteca foi desenvolvida para o uso do [https://github.com/verbeux-ai/myzap](myzap), api do whatsapp usando a linguagem go.
 
 Status: Em desenvolvimento
 
@@ -9,17 +9,17 @@ Status: Em desenvolvimento
 Este é um exemplo de envio de mensagem a partir do client.
 
 ```go
-import z_api "github.com/verbeux-ai/z-api-go"
+import myzap "github.com/verbeux-ai/myzap"
 import "context"
 
-client := z_api.NewClient(
-    z_api.WithToken("<token>"),
-    z_api.WithInstance("<instance>"),
-    z_api.WithSecret("<secret>"),
+client = myzap.NewClient(
+    myzap.WithToken(os.Getenv("TOKEN")),
+    myzap.WithSessionKey(os.Getenv("SESSION_KEY")),
+    myzap.WithBaseUrl(os.Getenv("BASE_URL")),
 )
 response, err := client.SendTextMessage(context.Background(), &z_api.TextMessageRequest{
-    Phone:   text.Phone,
-    Message: txt,
+    Number:   "558500000000",
+    Phone: "Teste",
 })
 if err != nil {
     panic(err)
@@ -32,7 +32,7 @@ fmt.Println(response)
 Este é um exemplo de como escutar mensagens no webhook
 
 ```go
-import "github.com/verbeux-ai/z-api-go/listener"
+import "github.com/verbeux-ai/myzap/listener"
 
 whatsappListener := listener.NewMessageListener()
 whatsappListener.HandleErrors(func (err error) {
@@ -41,9 +41,9 @@ whatsappListener.HandleErrors(func (err error) {
 
 // register listeners
 whatsappListener.OnMessage(func (message *listener.WebhookMessage) error {
-    if message.Text != nil {
+  
         // treat your text message here
-    }
+  
     
     return nil
 })
@@ -55,16 +55,16 @@ if err := whatsappListener.ReadBodyAsync(ctx.Request().Body); err != nil {
 
 ## Features disponíveis
 
-| Funcionalidade        | Implementado |
-|-------------------------------|--------------|
-| Enviar Mensagem de Texto      | ✔            |
-| Atualizar Webhook de Entrega  | ✔            |
-| Atualizar Webhook de Recebido | ✔            |
-| Obter Status                  | ✔            |
-| Obter Imagem do QR Code       | ✔            |
-| Desconectar Instância         | ✔            |
-| Obter Conversas               | ✔            |
-| Obter Tags                    | ✔            |
+| Funcionalidade           | Implementado |
+|--------------------------|--------------|
+| Enviar Mensagem de Texto | ✔            |
+| Cria instancia           | ✔            |
+| Deleta instancia         | ✔            |
+| Obter Status             | ✔            |
+| Obter Imagem do QR Code  | ✔            |
+| Obter Tags               | ✔            |
+| Criar Tags               | ✔            |
+| Atribuir Tags            | ✔            |
 
 
 > Você está convidado a contribuir ao repositório!
