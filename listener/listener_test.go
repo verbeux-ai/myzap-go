@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/verbeux-ai/myzap/listener"
+	"github.com/verbeux-ai/myzap-go/listener"
 )
 
 func TestListener_OnMessage(t *testing.T) {

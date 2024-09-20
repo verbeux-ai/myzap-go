@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"github.com/verbeux-ai/myzap"
+	myzap "github.com/verbeux-ai/myzap-go"
 )
 
 var client *myzap.Client

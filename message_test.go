@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/verbeux-ai/myzap"
+	"github.com/verbeux-ai/myzap-go"
 )
 
 func TestSendTextMessage(t *testing.T) {

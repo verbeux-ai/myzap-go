@@ -1,4 +1,4 @@
-module github.com/verbeux-ai/myzap
+module github.com/verbeux-ai/myzap-go
 
 go 1.22.6
 

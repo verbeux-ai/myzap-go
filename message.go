@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/verbeux-ai/myzap/listener"
+	"github.com/verbeux-ai/myzap-go/listener"
 )
 
 type TextMessageRequest struct {
