@@ -16,7 +16,7 @@ type WebhookMessage struct {
 	From        string             `json:"from"`
 	Thumbnail   string             `json:"thumbnail"`
 	Url         string             `json:"url"`
-	QuotedMsg   string             `json:"quotedMsg"`
+	QuotedMsg   interface{}        `json:"quotedMsg"`
 	QuotedMsgId string             `json:"quotedMsgId"`
 	Datetime    string             `json:"datetime"`
 	Data        WebhookMessageData `json:"data"`
