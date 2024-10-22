@@ -67,3 +67,62 @@ func (s *Client) SendTextMessage(ctx context.Context, d *TextMessageRequest) (*T
 
 	return &TextMessageResponse{&toReturn.Data}, nil
 }
+
+type ImageMessageRequest struct {
+	Path    string `json:"path"`
+	Caption string `json:"caption,omitempty"`
+	Number  string `json:"number"`
+}
+
+type imageMessageRequest struct {
+	Session string `json:"session"`
+	*ImageMessageRequest
+}
+
+type ImageMessageResponse struct {
+	Result    int         `json:"result"`
+	Type      string      `json:"type"`
+	MessageId interface{} `json:"messageId"`
+	Session   string      `json:"session"`
+	File      string      `json:"file"`
+	Data      interface{} `json:"data"`
+}
+
+type imageMessageResponseInternal struct {
+	Data   ImageMessageResponse `json:"data"`
+	Result int                  `json:"result"`
+}
+
+func (s *Client) SendImageMessage(ctx context.Context, d *ImageMessageRequest) (*ImageMessageResponse, error) {
+	if d == nil {
+		return nil, fmt.Errorf("missing request object")
+	}
+
+	req := imageMessageRequest{
+		Session:             s.sessionKey,
+		ImageMessageRequest: d,
+	}
+
+	resp, err := s.request(ctx, req, http.MethodPost, sendImageEndpoint)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode > 399 {
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		bodyErr := errors.New(string(body))
+		return nil, fmt.Errorf("failed to send image message with code %d: %w", resp.StatusCode, bodyErr)
+	}
+
+	var toReturn imageMessageResponseInternal
+	if err = json.NewDecoder(resp.Body).Decode(&toReturn); err != nil {
+		return nil, err
+	}
+
+	return &toReturn.Data, nil
+}

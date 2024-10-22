@@ -20,3 +20,13 @@ func TestSendTextMessage(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, result)
 }
+
+func TestSendImageMessage(t *testing.T) {
+	ctx := context.Background()
+	result, err := client.SendImageMessage(ctx, &myzap.ImageMessageRequest{
+		Number: os.Getenv("PHONE"),
+		Path:   "https://cdn.mos.cms.futurecdn.net/VFLt5vHV7aCoLrLGjP9Qwm-1200-80.jpg",
+	})
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+}
