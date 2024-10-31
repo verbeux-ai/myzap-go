@@ -80,17 +80,20 @@ type imageMessageRequest struct {
 }
 
 type ImageMessageResponse struct {
-	Result    int         `json:"result"`
-	Type      string      `json:"type"`
-	MessageId interface{} `json:"messageId"`
-	Session   string      `json:"session"`
-	File      string      `json:"file"`
-	Data      interface{} `json:"data"`
+	Ack           int                        `json:"ack"`
+	Id            string                     `json:"id"`
+	SendMsgResult ImageMessageResponseResult `json:"sendMsgResult"`
+}
+
+type ImageMessageResponseResult struct {
+	MessageSendResult string `json:"messageSendResult"`
 }
 
 type imageMessageResponseInternal struct {
-	Data   ImageMessageResponse `json:"data"`
-	Result int                  `json:"result"`
+	Data    ImageMessageResponse `json:"data"`
+	Result  int                  `json:"result"`
+	Type    string               `json:"type"`
+	Session string               `json:"session"`
 }
 
 func (s *Client) SendImageMessage(ctx context.Context, d *ImageMessageRequest) (*ImageMessageResponse, error) {
