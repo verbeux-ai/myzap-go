@@ -6,6 +6,7 @@ const (
 
 	sendTextEndpoint  = "sendText"  // POST
 	sendImageEndpoint = "sendImage" // POST
+	sendFileEndpoint  = "sendFile"  // POST
 
 	tagsEndpoint           = "getAllLabels"      // POST
 	createTagEndpoint      = "addNewLabel"       // POST

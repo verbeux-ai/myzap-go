@@ -30,3 +30,13 @@ func TestSendImageMessage(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, result)
 }
+
+func TestSendFileMessage(t *testing.T) {
+	ctx := context.Background()
+	result, err := client.SendFileMessage(ctx, &myzap.FileMessageRequest{
+		Number: os.Getenv("PHONE"),
+		Path:   "https://storage.googleapis.com/verbeux-public-images/cdn/ebook-corretores.pdf",
+	})
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+}
