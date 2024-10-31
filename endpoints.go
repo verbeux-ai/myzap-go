@@ -13,5 +13,5 @@ const (
 	addOrRemoveTagEndpoint = "addOrRemoveLabels" // POST
 
 	getConnectionStatusEndpoint = "getConnectionStatus"
-	getQrCodeEndpoint           = "getQrCode"
+	getQrCodeEndpoint           = "getQrCodeString"
 )
