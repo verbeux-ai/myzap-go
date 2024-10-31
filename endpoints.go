@@ -12,6 +12,9 @@ const (
 	createTagEndpoint      = "addNewLabel"       // POST
 	addOrRemoveTagEndpoint = "addOrRemoveLabels" // POST
 
+	startTypingEndpoint = "startTyping" // POST
+	stopTypingEndpoint  = "stopTyping"  // POST
+
 	getConnectionStatusEndpoint = "getConnectionStatus"
 	getQrCodeEndpoint           = "getQrCodeString"
 )
