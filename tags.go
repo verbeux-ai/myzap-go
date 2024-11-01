@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type tagsRequestInternal struct {
@@ -71,6 +72,21 @@ type CreateTagResponse struct {
 
 func (s *Client) CreateTag(ctx context.Context, name string) error {
 	req := &createTagRequest{Name: name}
+
+	var err error
+	for range 3 {
+		err = s.createTagRetry(ctx, req)
+		if err != nil {
+			continue
+		}
+
+		err = nil
+	}
+
+	return err
+}
+
+func (s *Client) createTagRetry(ctx context.Context, req *createTagRequest) error {
 	resp, err := s.request(ctx, req, http.MethodPost, createTagEndpoint)
 	if err != nil {
 		return err
@@ -87,5 +103,16 @@ func (s *Client) CreateTag(ctx context.Context, name string) error {
 		return fmt.Errorf("failed to get qr code with code %d: %w", resp.StatusCode, bodyErr)
 	}
 
-	return nil
+	tags, err := s.GetTags(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, tag := range tags {
+		if strings.EqualFold(tag.Name, req.Name) {
+			return nil
+		}
+	}
+
+	return ErrTagNotFound
 }
